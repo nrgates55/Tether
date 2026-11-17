@@ -1,122 +1,60 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useState } from "react";
+import PeoplePage from "./pages/PeoplePage";
+import "./App.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+type Tab = "home" | "people" | "calendar" | "settings";
+
+const navigation: { id: Tab; label: string; symbol: string }[] = [
+  { id: "home", label: "Home", symbol: "⌂" },
+  { id: "people", label: "People", symbol: "◎" },
+  { id: "calendar", label: "Calendar", symbol: "▦" },
+  { id: "settings", label: "Settings", symbol: "⚙" },
+];
+
+export default function App() {
+  const [activeTab, setActiveTab] = useState<Tab>("people");
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
+    <div className="app-shell">
+      <header className="app-header">
+        <div className="brand-mark" aria-hidden="true">t</div>
         <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
-          </p>
+          <div className="brand-name">tether<span>.</span></div>
+          <div className="brand-subtitle">Your connections, your space.</div>
         </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+        <span className="local-indicator" title="Data saved on this device">
+          <span aria-hidden="true" className="status-dot" /> Local
+        </span>
+      </header>
 
-      <div className="ticks"></div>
+      <main className="app-main" id="main-content">
+        {activeTab === "people" ? (
+          <PeoplePage />
+        ) : (
+          <section className="coming-soon">
+            <div className="coming-soon-icon" aria-hidden="true">✦</div>
+            <p className="eyebrow">COMING SOON</p>
+            <h1>{navigation.find((tab) => tab.id === activeTab)?.label}</h1>
+            <p>We're building the People section first. The rest of Tether will grow from there.</p>
+            <button className="button button-primary" onClick={() => setActiveTab("people")}>Go to People</button>
+          </section>
+        )}
+      </main>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      <nav className="bottom-nav" aria-label="Main navigation">
+        {navigation.map((tab) => (
+          <button
+            key={tab.id}
+            type="button"
+            className={`nav-item ${activeTab === tab.id ? "active" : ""}`}
+            aria-current={activeTab === tab.id ? "page" : undefined}
+            onClick={() => setActiveTab(tab.id)}
+          >
+            <span className="nav-icon" aria-hidden="true">{tab.symbol}</span>
+            <span>{tab.label}</span>
+          </button>
+        ))}
+      </nav>
+    </div>
+  );
 }
-
-export default App
